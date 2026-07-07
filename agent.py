@@ -13,20 +13,20 @@ load_dotenv(env_path)
 
 os.environ["WORKSPACE_ROOT"] = os.path.join(current_dir, "target_repo") 
 
-# Week 4 Core Tools
+
 from tools.web import execute_web_search, execute_web_fetch, WEB_TOOLS
 from tools.files import tool_list_files, tool_read_file, tool_write_file, tool_edit_file, FILE_TOOLS_SCHEMAS
 from tools.papers import tool_paper_search, tool_read_paper, PAPERS_TOOLS_SCHEMAS
 from tools.exec import run_command, EXEC_TOOLS
 from tools.plan import todo_write, todo_list_exists, all_items_completed, PLAN_TOOLS
 
-# Week 5 Capability Tools & Managers
+
 from tools.skills import load_skill, get_available_skills_text, SKILL_TOOLS
 from mcp_manager import MCPManager, load_mcp_config
 
 class Agent:
     def __init__(self, session_id: str = None):
-        # Convert internal client to Async Openrouter interface
+        
         self.client = AsyncOpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=os.environ.get("OPENROUTER_API_KEY"),
@@ -44,8 +44,7 @@ class Agent:
         
         self.system_prompt_content = self._load_procedural_memory_rules()
         self.history = [{"role": "system", "content": self.system_prompt_content}]
-        
-        # Merge local core tools with progressive skill loading schema
+       
         self.local_tools = WEB_TOOLS + FILE_TOOLS_SCHEMAS + PAPERS_TOOLS_SCHEMAS + EXEC_TOOLS + PLAN_TOOLS + SKILL_TOOLS
         self.session_title = None
         
@@ -113,7 +112,7 @@ class Agent:
             return "Untitled Session"
 
     async def chat(self, user_input: str) -> str:
-        # Establish runtime connection blocks to remote tools at startup
+        
         if not self.mcp_initialized:
             try:
                 config = load_mcp_config()
@@ -123,7 +122,7 @@ class Agent:
             except Exception as e:
                 self._emit("error", {"msg": f"MCP Infrastructure pipeline integration failed: {str(e)}"})
 
-        # Inject up-to-date markdown skill registries straight into the baseline prompt
+        
         available_skills = get_available_skills_text()
         dynamic_system_prompt = f"""{self._load_procedural_memory_rules()}
 
@@ -153,7 +152,7 @@ Core Execution Policy:
         for iteration in range(self.max_iterations):
             self._emit("log", {"msg": f"Starting ReAct Iteration Loop Step {iteration + 1}..."})
             
-            # Reassemble total execution capabilities (Local schemas + Live remote tools)
+            
             combined_tools = self.local_tools + self.mcp_manager.openai_tools
             
             response = await self.client.chat.completions.create(
@@ -293,7 +292,7 @@ async def execution_coordinator():
         await repl.close_channels()
     elif len(sys.argv) > 1 and sys.argv[1] == "--tui":
         from tui import TUIAgent
-        # If your local tui requires updates, integrate it here.
+      
         TUIAgent().run()
     else:
         repl = REPLAgent()
