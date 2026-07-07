@@ -10,7 +10,7 @@ from mcp.client.streamable_http import streamablehttp_client
 load_dotenv()
 
 def load_mcp_config(path="config.json"):
-    """Read config.json and substitute environmental references."""
+    
     if not os.path.exists(path):
         return {}
     with open(path, "r", encoding="utf-8") as f:
@@ -27,7 +27,6 @@ def load_mcp_config(path="config.json"):
     return json.loads(resolved).get("mcpServers", {})
 
 class MCPManager:
-    """Connects to every server in the configuration and exposes tools dynamically."""
 
     def __init__(self):
         self.stack = AsyncExitStack()
