@@ -4,7 +4,7 @@ import json
 SKILLS_DIR = os.path.abspath(os.environ.get("SKILLS_DIR", "skills"))
 
 def parse_skill_metadata(content):
-    """Extract name and description from the YAML frontmatter of SKILL.md."""
+    
     if content.startswith("---"):
         parts = content.split("---", 2)
         if len(parts) >= 3:
@@ -19,7 +19,6 @@ def parse_skill_metadata(content):
     return None, None
 
 def get_available_skills_text() -> str:
-    """Returns a formatted list of descriptions for the main System Prompt context."""
     if not os.path.exists(SKILLS_DIR):
         return "No skills currently loaded."
     
@@ -38,7 +37,7 @@ def get_available_skills_text() -> str:
     return "\n".join(metadata) if metadata else "No skills currently loaded."
 
 def load_skill(name: str) -> str:
-    """Read and return the complete body instructions of a specific procedural skill."""
+   
     if not os.path.exists(SKILLS_DIR):
         return json.dumps({"error": "Skills directory not found."})
         
@@ -60,7 +59,7 @@ SKILL_TOOLS = [{
     "type": "function",
     "function": {
         "name": "load_skill",
-        "description": "Load the complete instructions and runbook steps for a given skill procedure.",
+        "description": "Load the complete instructions and  steps for a given skill procedure.",
         "parameters": {
             "type": "object",
             "properties": {
